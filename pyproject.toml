@@ -7,7 +7,7 @@ name = "route.sense"
 version = "0.1.0"
 description = "A UCB1 router that learns which model earns its cost: quality minus weighted cost as reward, deterministic and dependency-free."
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 license = { text = "MIT" }
 authors = [{ name = "AndMaverick LLC" }]
 
