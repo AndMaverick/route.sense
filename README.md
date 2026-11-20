@@ -2,7 +2,9 @@
 
 [![CI](https://github.com/AndMaverick/route.sense/actions/workflows/ci.yml/badge.svg)](https://github.com/AndMaverick/route.sense/actions/workflows/ci.yml)
 
-Model routing that learns. Each model is an arm of a bandit, and reward is quality minus a weighted cost, so the cheap model wins when it is good enough and the expensive one wins when the quality gap pays for itself. Around that core: the question finance actually asks ("what is the cheapest model that clears our quality bar?"), forgetting for models that change under you, circuit breakers, budgets, segment routing, and offline evaluation from logs you already have. Standard library only, deterministic, typed, Python 3.10 and up.
+Most teams pick a model once, when they build, and keep it. Prices move and quality moves, and the model that was right at launch quietly becomes a guess.
+
+route.sense is model routing that learns. Each model is an arm of a bandit, and reward is quality minus a weighted cost, so the cheap model wins when it is good enough and the expensive one wins when the quality gap pays for itself. Around that core: the question finance actually asks ("what is the cheapest model that clears our quality bar?"), forgetting for models that change under you, circuit breakers, budgets, segment routing, and offline evaluation from logs you already have. Standard library only, deterministic, typed, Python 3.10 and up.
 
 ```
 pip install git+https://github.com/AndMaverick/route.sense
@@ -106,6 +108,8 @@ Pairs with [eval.forge](https://github.com/AndMaverick/eval.forge) for the quali
 ```
 python -m unittest discover -s tests -t . -v
 ```
+
+**Related repositories:** [model.ledger](https://github.com/AndMaverick/model.ledger) accounts for what each routing decision cost, call by call. [mao-framework](https://github.com/AndMaverick/mao-framework) has a smaller module, `mao.router`, that learns which permitted model earns its price inside a governed run.
 
 MIT licensed. Built by [AndMaverick LLC](https://www.andmaverick.com).
 
