@@ -60,7 +60,7 @@ router = Router(
 model = router.select(require=["vision"], max_cost=0.05, max_latency=4.0)
 ```
 
-- **Forgetting.** `discount` below 1 down-weights old observations, so a provider changing a model is a tracking problem, not a permanent mistake. The test suite simulates a silent regression and compares regret with and without it.
+- **Forgetting.** `discount` below 1 gives less weight to old observations, so a provider changing a model is a tracking problem, not a permanent mistake. The test suite simulates a silent regression and compares regret with and without it.
 - **Circuit breaker.** A failed call counts as quality 0. After `trip_after` in a row the arm is out for `cooldown` selections, then gets one trial call. A success closes it.
 - **Constraints.** Tags, cost and latency caps use your hints until real observations replace them. A `Budget` keeps spend inside a limit. If nothing is eligible you get `fallback`, or `NoEligibleArm`.
 - **Segments.** `ContextRouter` keeps one router per task type or tenant, each starting from the global averages through a prior, so a new segment does not start cold.
@@ -75,10 +75,10 @@ python -m route_sense report calls.jsonl --baseline large --cost-weight 0.2
 python -m route_sense replay calls.jsonl --policy floor --floor 0.85
 ```
 
-`report` gives per-model quality, cost and net reward with intervals, and a significance test against the baseline, including cost per 1000 calls if traffic moved. Two estimators answer "what would this policy have done on past traffic", and their assumptions are the point:
+`report` gives quality, cost and net reward per model, cost and net reward with intervals, and a significance test against the baseline, including cost per 1000 calls if traffic moved. Two estimators answer "what would this policy have done on past traffic", and their assumptions are the point:
 
 - `replay` is unbiased only if the logged model for each call was chosen uniformly at random. A short randomised rollout gives you that log.
-- `ips` works on any log that recorded `propensity`, including one from an adaptive router. It is self-normalised and clips large weights, which trades a little bias for much less variance.
+- `ips` works on any log that recorded `propensity`, including one from an adaptive router. It is normalised by itself and clips large weights, which trades a little bias for much less variance.
 
 Neither says anything about a model that never appears in the log.
 
@@ -96,7 +96,7 @@ result.regret, result.pulls
 
 - It is only as good as the quality signal you feed it. A noisy or biased score teaches the router the wrong lesson efficiently.
 - Exploration costs something: until an arm is proven or disproven, some calls go to it. `strict` mode limits this at the price of learning more slowly.
-- The significance tests are normal approximations and treat calls as independent. Do not read a p-value as more than a sanity check on a few thousand calls.
+- The significance tests are normal approximations and treat calls as independent. Do not read a p value as more than a sanity check on a few thousand calls.
 - Prices are an input you supply. Nothing here knows what any provider charges.
 
 Pairs with [eval.forge](https://github.com/AndMaverick/eval.forge) for the quality signal and [model.ledger](https://github.com/AndMaverick/model.ledger) for the cost signal.
@@ -111,6 +111,6 @@ MIT licensed. Built by [AndMaverick LLC](https://www.andmaverick.com).
 
 ---
 
-**Related reading:** [The Meter Is Running. Nobody Built the Architecture to Stop It.](https://blog.andmaverick.com/the-meter-is-running-nobody-built-the-architecture-to-stop-it?utm_source=github&utm_medium=repo&utm_campaign=route.sense)
+**Read the thinking:** [The Meter Is Running. Nobody Built the Architecture to Stop It.](https://blog.andmaverick.com/the-meter-is-running-nobody-built-the-architecture-to-stop-it?utm_source=github&utm_medium=repo&utm_campaign=route.sense)
 
 **If this is your problem.** If your AI spend is outrunning your results, that is an architecture problem, and it is solvable. I am happy to look at it with you. [Begin a conversation](https://calendly.com/andmaverick?utm_source=github&utm_medium=repo&utm_campaign=route.sense).
